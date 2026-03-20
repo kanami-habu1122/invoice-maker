@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>請求書メーカー</title>
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/modal.css" />
+</head>
+<body>
+
+  <!-- ===== ヘッダー ===== -->
+  <header class="header">
+    <div class="header-inner">
+      <!-- ロゴ -->
+      <div class="header-logo">請求書<span>メーカー</span></div>
+
+      <!-- 右側: プランバッジ -->
+      <div class="header-right">
+        <span class="badge badge-free" id="planBadge">無料 0/3件</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== メインコンテンツ ===== -->
+  <main class="page-content">
+
+    <!-- ページタイトル + 新規作成ボタン -->
+    <div class="page-header">
+      <h1 class="page-title">請求書一覧</h1>
+      <button class="btn btn-primary" id="newInvoiceBtn">＋ 新しい請求書</button>
+    </div>
+
+    <!-- プランバナー（残り1件以下になったら表示） -->
+    <div class="plan-banner hidden" id="planBanner">
+      <span class="plan-banner-text" id="planBannerText"></span>
+      <button class="btn btn-sm btn-secondary" onclick="showUpgradeModal('limit_reached')">
+        Proプランを見る
+      </button>
+    </div>
+
+    <!-- 請求書一覧（list.js が動的に描画する） -->
+    <ul class="invoice-list" id="invoiceList"></ul>
+
+  </main>
+
+  <!-- JS の読み込み（依存関係の順に読む） -->
+  <!-- invoice.js と storage.js は list.js より先に読む必要がある -->
+  <script src="js/invoice.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/plan.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/list.js"></script>
+
+</body>
+</html>

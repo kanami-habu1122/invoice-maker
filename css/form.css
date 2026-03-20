@@ -1,0 +1,262 @@
+/* ============================================================
+   form.css - 入力フォームのスタイル
+   ============================================================ */
+
+/* ============================================================
+   2カラムレイアウト（左:フォーム / 右:プレビュー）
+   ============================================================ */
+.editor-layout {
+  display: grid;
+  /* 左ペイン(フォーム): 1fr / 右ペイン(プレビュー): 420px固定 */
+  grid-template-columns: 1fr 420px;
+  gap: var(--space-lg);
+  align-items: start;
+}
+
+/* 左ペイン: 入力フォーム */
+.form-pane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* 右ペイン: プレビュー（スクロールしても追従する） */
+.preview-pane {
+  position: sticky;
+  top: 76px; /* ヘッダー(60px) + 余白(16px) */
+}
+
+
+/* ============================================================
+   フォームセクション（カード）
+   ============================================================
+   使い方:
+     <div class="form-card">
+       <div class="form-card-title">基本情報</div>
+       ...フォーム内容...
+     </div>
+   ============================================================ */
+.form-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+}
+
+.form-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--border);
+}
+
+
+/* ============================================================
+   フォーム部品
+   ============================================================ */
+
+/* 1行のフィールド（ラベル + 入力） */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-md);
+}
+
+/* 最後のフィールドは下マージンなし */
+.form-field:last-child {
+  margin-bottom: 0;
+}
+
+/* ラベル */
+.form-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* 必須マーク */
+.form-label .required {
+  color: var(--red);
+  margin-left: 2px;
+}
+
+/* 入力フィールド共通（input・select・textarea） */
+.form-input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--text-primary);
+  background: var(--bg-white);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  outline: none;
+}
+
+.form-input:focus {
+  border-color: var(--primary);
+  /* フォーカスリングを青くする */
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.form-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* テキストエリア */
+textarea.form-input {
+  resize: vertical; /* 縦方向だけリサイズ可能 */
+  min-height: 80px;
+  line-height: 1.5;
+}
+
+/* 横並びのフィールド（例: 請求日 + 支払期限） */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+}
+
+
+/* ============================================================
+   明細テーブル
+   ============================================================ */
+.items-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+/* テーブルヘッダー */
+.items-table th {
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: var(--space-xs) var(--space-sm);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+/* テーブルの各行 */
+.items-table td {
+  padding: var(--space-xs) var(--space-xs);
+  vertical-align: middle;
+}
+
+/* 品目欄は幅広め */
+.items-table .col-desc    { width: 30%; }
+.items-table .col-qty     { width: 12%; min-width: 64px; }
+.items-table .col-price   { width: 18%; min-width: 90px; }
+.items-table .col-tax     { width: 20%; min-width: 100px; }
+.items-table .col-subtotal{ width: 14%; min-width: 80px; text-align: right; }
+.items-table .col-action  { width: 4%;  min-width: 32px; }
+
+/* 小計セル */
+.item-subtotal {
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+/* 行削除ボタン */
+.item-del-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 16px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.item-del-btn:hover {
+  color: var(--red);
+  background: #FEF2F2;
+}
+
+/* テーブル内の入力フィールド（パディングを詰める） */
+.items-table .form-input {
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
+/* 「行を追加」ボタン */
+.add-item-btn {
+  margin-top: var(--space-sm);
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.add-item-btn:hover {
+  text-decoration: underline;
+}
+
+
+/* ============================================================
+   合計エリア
+   ============================================================ */
+.totals-area {
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border);
+}
+
+.totals-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 14px;
+}
+
+.totals-row.total {
+  font-size: 17px;
+  font-weight: 700;
+  margin-top: var(--space-sm);
+  padding-top: var(--space-sm);
+  border-top: 2px solid var(--text-primary);
+}
+
+/* フォームのアクションボタン行 */
+.form-actions {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: flex-end;
+  margin-top: var(--space-lg);
+}
+
+
+/* ============================================================
+   レスポンシブ（スマホ: 1カラムに切り替え）
+   ============================================================ */
+@media (max-width: 768px) {
+  .editor-layout {
+    grid-template-columns: 1fr;
+  }
+
+  /* スマホではプレビューを非表示にする（タブで切り替え）*/
+  .preview-pane {
+    position: static;
+    display: none;
+  }
+
+  .preview-pane.show {
+    display: block;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}

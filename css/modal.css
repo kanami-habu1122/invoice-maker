@@ -1,0 +1,123 @@
+/* ============================================================
+   modal.css - アップグレードモーダル
+   ============================================================ */
+
+/* 背景オーバーレイ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  z-index: 1000;
+  animation: modalFadeIn 0.2s ease;
+}
+
+.modal-overlay.hidden {
+  display: none;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* モーダル本体 */
+.modal {
+  background: var(--bg-white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow-lg);
+  animation: modalSlideUp 0.2s ease;
+}
+
+@keyframes modalSlideUp {
+  from { transform: translateY(16px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ヘッダー */
+.modal-icon  { font-size: 40px; margin-bottom: var(--space-sm); }
+.modal-title { font-size: 20px; font-weight: 700; margin-bottom: var(--space-xs); }
+.modal-desc  { font-size: 14px; color: var(--text-secondary); margin-bottom: var(--space-lg); line-height: 1.6; }
+
+/* 機能リスト */
+.modal-features {
+  background: var(--primary-light);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.modal-features li {
+  font-size: 13px;
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.modal-features li::before {
+  content: '✓';
+  color: var(--primary);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* 価格表示 */
+.modal-price {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+}
+
+.modal-price-amount {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.modal-price-unit {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* メールアドレス入力（事前登録） */
+.modal-email-area {
+  margin-bottom: var(--space-md);
+}
+
+.modal-email-area .form-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.modal-email-area .form-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+}
+
+/* ボタン */
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* 完了メッセージ */
+.modal-success {
+  text-align: center;
+  padding: var(--space-md) 0;
+}
+
+.modal-success-icon  { font-size: 40px; margin-bottom: var(--space-sm); }
+.modal-success-title { font-size: 16px; font-weight: 700; margin-bottom: var(--space-xs); }
+.modal-success-desc  { font-size: 13px; color: var(--text-secondary); }

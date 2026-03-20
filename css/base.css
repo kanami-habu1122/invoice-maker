@@ -1,0 +1,116 @@
+/* ============================================================
+   base.css - リセット・共通スタイル・CSS変数
+   ============================================================ */
+
+/* CSS変数（色・サイズを一箇所で管理する） */
+:root {
+  /* メインカラー（青） */
+  --primary:       #2563EB;
+  --primary-dark:  #1D4ED8;
+  --primary-light: #EFF6FF;
+
+  /* アクセントカラー */
+  --green:        #16A34A;
+  --red:          #DC2626;
+  --orange:       #EA580C;
+  --orange-light: #FFF7ED;
+
+  /* テキスト */
+  --text-primary:   #111827;
+  --text-secondary: #6B7280;
+  --text-muted:     #9CA3AF;
+
+  /* 背景・ボーダー */
+  --bg-page:  #F9FAFB;
+  --bg-white: #FFFFFF;
+  --border:   #E5E7EB;
+
+  /* 影 */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.10);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.15);
+
+  /* 角丸 */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  /* フォント */
+  --font-base: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
+
+  /* 間隔 */
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  32px;
+  --space-2xl: 48px;
+}
+
+/* リセット */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-base); background: var(--bg-page); color: var(--text-primary); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+ul, ol { list-style: none; }
+img { max-width: 100%; display: block; }
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+input, select, textarea { font-family: inherit; font-size: inherit; }
+
+/* ============================================================
+   共通ボタン
+   使い方: <button class="btn btn-primary">保存</button>
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  min-height: 40px;
+  padding: 0 var(--space-md);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  transition: background 0.15s ease, transform 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+}
+.btn:active   { transform: scale(0.98); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* 青（メインアクション） */
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: var(--primary-dark); }
+
+/* 白（サブアクション） */
+.btn-secondary { background: var(--bg-white); color: var(--text-primary); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--bg-page); }
+
+/* 赤（削除） */
+.btn-danger { background: var(--bg-white); color: var(--red); border: 1px solid var(--border); }
+.btn-danger:hover { background: #FEF2F2; border-color: var(--red); }
+
+/* サイズ修飾子 */
+.btn-sm   { min-height: 32px; padding: 0 var(--space-sm); font-size: 13px; }
+.btn-full { width: 100%; }
+
+/* ============================================================
+   共通バッジ（プランの表示など）
+   使い方: <span class="badge badge-free">無料プラン</span>
+   ============================================================ */
+.badge { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 100px; font-size: 12px; font-weight: 600; }
+.badge-free { background: var(--orange-light); color: var(--orange); }
+.badge-pro  { background: var(--primary-light); color: var(--primary); }
+
+/* ユーティリティ */
+.text-secondary { color: var(--text-secondary); }
+.text-muted     { color: var(--text-muted); }
+.text-sm        { font-size: 13px; }
+.text-right     { text-align: right; }
+.divider        { border: none; border-top: 1px solid var(--border); margin: var(--space-lg) 0; }
+
+/* 空状態（データがないときの表示） */
+.empty-state       { text-align: center; padding: var(--space-2xl) var(--space-lg); }
+.empty-state-icon  { font-size: 48px; margin-bottom: var(--space-md); }
+.empty-state-title { font-size: 18px; font-weight: 600; margin-bottom: var(--space-sm); }
+.empty-state-desc  { font-size: 14px; color: var(--text-secondary); margin-bottom: var(--space-lg); }

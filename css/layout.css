@@ -1,0 +1,208 @@
+/* ============================================================
+   layout.css - ヘッダー・ページレイアウト
+   ============================================================ */
+
+/* ============================================================
+   ヘッダー
+   ============================================================ */
+.header {
+  background: var(--bg-white);
+  border-bottom: 1px solid var(--border);
+  position: sticky; /* スクロールしても上に固定される */
+  top: 0;
+  z-index: 10;
+}
+
+.header-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.header-logo {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: -0.3px;
+}
+
+.header-logo span {
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+
+/* ============================================================
+   ページ共通レイアウト
+   ============================================================ */
+.page-content {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-lg);
+}
+
+/* ページタイトルエリア（タイトル + アクションボタン） */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-xl);
+  gap: var(--space-md);
+}
+
+.page-title {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+
+/* ============================================================
+   プラン使用状況バー
+   ============================================================
+   「無料プラン: 2/3件使用中」のバナー
+   ============================================================ */
+.plan-banner {
+  background: var(--orange-light);
+  border: 1px solid #FED7AA;
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg);
+  margin-bottom: var(--space-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.plan-banner-text {
+  font-size: 14px;
+  color: var(--orange);
+  font-weight: 500;
+}
+
+/* Pro プランのときは非表示 */
+.plan-banner.hidden { display: none; }
+
+
+/* ============================================================
+   請求書カード一覧
+   ============================================================ */
+.invoice-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* 1枚の請求書カード */
+.invoice-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  transition: box-shadow 0.15s ease;
+}
+
+.invoice-card:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+/* カード左: 請求番号・件名・会社名 */
+.invoice-card-main {
+  flex: 1;
+  min-width: 0; /* テキストが溢れたときに省略できるよう必要 */
+}
+
+.invoice-card-number {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.invoice-card-subject {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  /* 長すぎる場合は「...」で省略する */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.invoice-card-client {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* カード右: 金額・日付 */
+.invoice-card-meta {
+  text-align: right;
+  flex-shrink: 0; /* 幅が縮まないよう固定 */
+}
+
+.invoice-card-amount {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.invoice-card-date {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* カードのアクションボタン群 */
+.invoice-card-actions {
+  display: flex;
+  gap: var(--space-xs);
+  flex-shrink: 0;
+}
+
+
+/* ============================================================
+   レスポンシブ（スマホ対応）
+   ============================================================ */
+@media (max-width: 600px) {
+  .page-content {
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  .header-inner {
+    padding: 0 var(--space-md);
+  }
+
+  /* スマホではカードを縦積みにする */
+  .invoice-card {
+    flex-wrap: wrap;
+    padding: var(--space-md);
+  }
+
+  .invoice-card-meta {
+    text-align: left;
+  }
+
+  /* アクションボタンを幅いっぱいに並べる */
+  .invoice-card-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .page-title {
+    font-size: 18px;
+  }
+}

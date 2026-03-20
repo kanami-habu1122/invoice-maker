@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>請求書作成 - 請求書メーカー</title>
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/form.css" />
+  <link rel="stylesheet" href="css/invoice.css" />
+  <link rel="stylesheet" href="css/modal.css" />
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-logo">請求書<span>メーカー</span></div>
+      <div class="header-right">
+        <span class="badge badge-free" id="planBadge">無料</span>
+        <a href="index.html" class="btn btn-secondary btn-sm">← 一覧</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-content">
+
+    <div class="page-header">
+      <h1 class="page-title" id="pageTitle">新しい請求書</h1>
+    </div>
+
+    <!-- 2カラムレイアウト -->
+    <div class="editor-layout">
+
+      <!-- ===== 左ペイン: 入力フォーム ===== -->
+      <div class="form-pane">
+
+        <!-- 基本情報 -->
+        <div class="form-card">
+          <div class="form-card-title">基本情報</div>
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label">請求日</label>
+              <input id="invoiceDate" class="form-input" type="date" />
+            </div>
+            <div class="form-field">
+              <label class="form-label">支払期限</label>
+              <input id="dueDate" class="form-input" type="date" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label">請求番号</label>
+              <input id="invoiceNumber" class="form-input" type="text" placeholder="例: 2024-001" />
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">件名 <span class="required">*</span></label>
+            <input id="subject" class="form-input" type="text" placeholder="例: Webサイト制作費（3月分）" />
+          </div>
+        </div>
+
+        <!-- 請求先 -->
+        <div class="form-card">
+          <div class="form-card-title">請求先</div>
+          <div class="form-field">
+            <label class="form-label">会社名・氏名</label>
+            <input id="clientName" class="form-input" type="text" placeholder="例: 株式会社ABC" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">担当者名</label>
+            <input id="clientPerson" class="form-input" type="text" placeholder="例: 田中 太郎" />
+          </div>
+        </div>
+
+        <!-- 請求元 -->
+        <div class="form-card">
+          <div class="form-card-title">請求元（自分の情報）</div>
+          <div class="form-field">
+            <label class="form-label">氏名・屋号</label>
+            <input id="senderName" class="form-input" type="text" placeholder="例: 山田 花子" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">郵便番号</label>
+            <input id="senderZip" class="form-input" type="text" placeholder="例: 150-0001" style="max-width:160px;" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">住所</label>
+            <input id="senderAddress" class="form-input" type="text" placeholder="例: 東京都渋谷区神南1-2-3" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">マンション・建物名・部屋番号</label>
+            <input id="senderAddress2" class="form-input" type="text" placeholder="例: ○○マンション101号室" />
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label">電話番号</label>
+              <input id="senderPhone" class="form-input" type="tel" placeholder="090-0000-0000" />
+            </div>
+            <div class="form-field">
+              <label class="form-label">メールアドレス</label>
+              <input id="senderEmail" class="form-input" type="email" placeholder="you@example.com" />
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">インボイス登録番号（任意）</label>
+            <input id="senderRegNum" class="form-input" type="text" placeholder="T1234567890123" />
+          </div>
+        </div>
+
+        <!-- 明細 -->
+        <div class="form-card">
+          <div class="form-card-title">明細</div>
+          <table class="items-table">
+            <thead>
+              <tr>
+                <th class="col-desc">品目・作業内容</th>
+                <th class="col-qty">数量</th>
+                <th class="col-price">単価</th>
+                <th class="col-tax">税率</th>
+                <th class="col-subtotal">小計</th>
+                <th class="col-action"></th>
+              </tr>
+            </thead>
+            <tbody id="itemsTbody"></tbody>
+          </table>
+          <button class="add-item-btn" type="button" id="addItemBtn">＋ 行を追加</button>
+          <div class="totals-area">
+            <div class="totals-row">
+              <span>小計</span><span id="subtotalEl">¥0</span>
+            </div>
+            <div class="totals-row" id="tax8Row" style="display:none;">
+              <span>消費税（8%）</span><span id="tax8El">¥0</span>
+            </div>
+            <div class="totals-row" id="tax10Row">
+              <span>消費税（10%）</span><span id="tax10El">¥0</span>
+            </div>
+            <div class="totals-row total">
+              <span>合計金額</span><span id="totalEl">¥0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 振込先 -->
+        <div class="form-card">
+          <div class="form-card-title">振込先</div>
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label">銀行名</label>
+              <input id="bankName" class="form-input" type="text" placeholder="〇〇銀行" />
+            </div>
+            <div class="form-field">
+              <label class="form-label">支店名</label>
+              <input id="branchName" class="form-input" type="text" placeholder="〇〇支店" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label">口座種別</label>
+              <select id="accountType" class="form-input">
+                <option value="普通">普通</option>
+                <option value="当座">当座</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label">口座番号</label>
+              <input id="accountNumber" class="form-input" type="text" placeholder="1234567" />
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">口座名義（カタカナ）</label>
+            <input id="accountHolder" class="form-input" type="text" placeholder="ヤマダ ハナコ" />
+          </div>
+        </div>
+
+        <!-- 備考 -->
+        <div class="form-card">
+          <div class="form-card-title">備考</div>
+          <div class="form-field">
+            <textarea id="notes" class="form-input" placeholder="お振込みの際は振込手数料をご負担ください。"></textarea>
+          </div>
+        </div>
+
+        <!-- アクションボタン -->
+        <div class="form-actions">
+          <button class="btn btn-secondary" id="cancelBtn" type="button">キャンセル</button>
+          <button class="btn btn-secondary" id="pdfBtn"    type="button">📄 PDFで出力</button>
+          <button class="btn btn-primary"   id="saveBtn"   type="button">保存する</button>
+        </div>
+
+      </div><!-- /.form-pane -->
+
+      <!-- ===== 右ペイン: リアルタイムプレビュー ===== -->
+      <div class="preview-pane">
+        <div class="invoice-preview" id="invoicePreview">
+          <!-- preview.js が動的に更新する -->
+        </div>
+      </div>
+
+    </div><!-- /.editor-layout -->
+  </main>
+
+  <script src="js/invoice.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/plan.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/form.js"></script>
+  <script src="js/preview.js"></script>
+  <script src="js/pdf.js"></script>
+  <script>
+    // ============================================================
+    // 初期化
+    // ============================================================
+    (function init() {
+      const editId   = getEditId();
+      const existing = editId ? getInvoice(editId) : null;
+
+      if (existing) {
+        document.getElementById('pageTitle').textContent = '請求書を編集';
+        populateForm(existing);
+      } else {
+        const empty = createEmptyInvoice();
+        // 前回保存した請求元情報を自動入力する
+        const settings = loadSettings();
+        Object.assign(empty, settings);
+        populateForm(empty);
+      }
+
+      updatePlanDisplay();
+
+      // PDFボタン
+      document.getElementById('pdfBtn').addEventListener('click', exportPdf);
+
+      // 全フォームへの入力監視: 変わるたびにプレビューを更新する
+      // querySelectorAll で全 input・select・textarea を一括取得
+      document.querySelectorAll('.form-pane input, .form-pane select, .form-pane textarea')
+        .forEach(el => {
+          el.addEventListener('input',  updatePreview);
+          el.addEventListener('change', updatePreview);
+        });
+
+      // 初回プレビュー表示
+      updatePreview();
+
+      // URLに ?print=1 がついていたら自動でPDF出力を起動する
+      // （一覧の「PDF」ボタンから来たとき）
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('print') === '1') {
+        setTimeout(exportPdf, 300);
+      }
+    })();
+  </script>
+
+</body>
+</html>
