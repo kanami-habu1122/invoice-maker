@@ -51,7 +51,10 @@
           <div class="form-row">
             <div class="form-field">
               <label class="form-label">請求番号</label>
-              <input id="invoiceNumber" class="form-input" type="text" placeholder="例: 2024-001" />
+              <div style="display:flex; gap:8px; align-items:center;">
+                <input id="invoiceNumber" class="form-input" type="text" placeholder="例: 2024-001" />
+                <button class="btn btn-secondary btn-sm" type="button" id="autoNumberBtn" title="Proプラン: 自動採番">⚡ 自動</button>
+              </div>
             </div>
           </div>
           <div class="form-field">
@@ -62,7 +65,20 @@
 
         <!-- 請求先 -->
         <div class="form-card">
-          <div class="form-card-title">請求先</div>
+          <div class="form-card-title" style="display:flex; justify-content:space-between; align-items:center;">
+            請求先
+            <button class="btn btn-secondary btn-sm" type="button" id="clientPickerBtn" title="Proプラン: 取引先を呼び出す">📋 取引先を選ぶ</button>
+          </div>
+          <!-- 取引先ドロップダウン（Proプラン） -->
+          <div id="clientPickerArea" style="display:none; margin-bottom:12px;">
+            <select id="clientPicker" class="form-input">
+              <option value="">-- 取引先を選択 --</option>
+            </select>
+            <div style="display:flex; gap:8px; margin-top:8px;">
+              <button class="btn btn-secondary btn-sm" type="button" id="clientSaveBtn">現在の情報を保存</button>
+              <button class="btn btn-danger btn-sm" type="button" id="clientDeleteBtn">削除</button>
+            </div>
+          </div>
           <div class="form-field">
             <label class="form-label">会社名・氏名</label>
             <input id="clientName" class="form-input" type="text" placeholder="例: 株式会社ABC" />
@@ -76,6 +92,18 @@
         <!-- 請求元 -->
         <div class="form-card">
           <div class="form-card-title">請求元（自分の情報）</div>
+          <!-- ロゴアップロード（Proプラン） -->
+          <div class="form-field" id="logoUploadArea">
+            <label class="form-label">ロゴ画像（任意）<span class="badge badge-pro" style="margin-left:6px; font-size:10px;">Pro</span></label>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <img id="logoPreviewImg" src="" alt="" style="display:none; height:40px; border-radius:4px; border:1px solid #e5e7eb;" />
+              <label class="btn btn-secondary btn-sm" style="cursor:pointer;">
+                画像を選択
+                <input id="logoInput" type="file" accept="image/*" style="display:none;" />
+              </label>
+              <button class="btn btn-danger btn-sm" type="button" id="logoDeleteBtn" style="display:none;">削除</button>
+            </div>
+          </div>
           <div class="form-field">
             <label class="form-label">氏名・屋号</label>
             <input id="senderName" class="form-input" type="text" placeholder="例: 山田 花子" />
@@ -110,7 +138,21 @@
 
         <!-- 明細 -->
         <div class="form-card">
-          <div class="form-card-title">明細</div>
+          <div class="form-card-title" style="display:flex; justify-content:space-between; align-items:center;">
+            明細
+            <button class="btn btn-secondary btn-sm" type="button" id="itemTemplateBtn" title="Proプラン: 明細テンプレート">📋 テンプレート</button>
+          </div>
+          <!-- 明細テンプレートドロップダウン（Proプラン） -->
+          <div id="itemTemplateArea" style="display:none; margin-bottom:12px;">
+            <select id="itemTemplatePicker" class="form-input">
+              <option value="">-- テンプレートを選択 --</option>
+            </select>
+            <div style="display:flex; gap:8px; margin-top:8px;">
+              <input id="itemTemplateName" class="form-input" type="text" placeholder="テンプレート名（例: 月次作業）" style="flex:1;" />
+              <button class="btn btn-secondary btn-sm" type="button" id="itemTemplateSaveBtn">保存</button>
+              <button class="btn btn-danger btn-sm" type="button" id="itemTemplateDeleteBtn">削除</button>
+            </div>
+          </div>
           <table class="items-table">
             <thead>
               <tr>
@@ -143,7 +185,21 @@
 
         <!-- 振込先 -->
         <div class="form-card">
-          <div class="form-card-title">振込先</div>
+          <div class="form-card-title" style="display:flex; justify-content:space-between; align-items:center;">
+            振込先
+            <button class="btn btn-secondary btn-sm" type="button" id="bankTemplateBtn" title="Proプラン: 振込先テンプレート">📋 テンプレート</button>
+          </div>
+          <!-- 振込先テンプレートドロップダウン（Proプラン） -->
+          <div id="bankTemplateArea" style="display:none; margin-bottom:12px;">
+            <select id="bankTemplatePicker" class="form-input">
+              <option value="">-- テンプレートを選択 --</option>
+            </select>
+            <div style="display:flex; gap:8px; margin-top:8px;">
+              <input id="bankTemplateName" class="form-input" type="text" placeholder="テンプレート名（例: メイン口座）" style="flex:1;" />
+              <button class="btn btn-secondary btn-sm" type="button" id="bankTemplateSaveBtn">保存</button>
+              <button class="btn btn-danger btn-sm" type="button" id="bankTemplateDeleteBtn">削除</button>
+            </div>
+          </div>
           <div class="form-row">
             <div class="form-field">
               <label class="form-label">銀行名</label>

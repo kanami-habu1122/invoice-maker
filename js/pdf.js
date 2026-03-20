@@ -19,6 +19,14 @@ async function exportPdf() {
   if (!previewEl) return;
   const previewHtml = previewEl.innerHTML;
 
+  // 無料プランのときだけウォーターマークを入れる
+  const watermarkHtml = getPlan() === 'free' ? `
+    <div style="text-align:right; margin-top:12px; font-size:10px; color:#bbb;">
+      無料プラン | 請求書メーカー
+    </div>
+  ` : '';
+
+
   // CSSファイルをテキストとして読み込む
   let baseCss = '', invoiceCss = '';
   try {
@@ -73,6 +81,7 @@ async function exportPdf() {
   <div class="invoice-preview">
     ${previewHtml}
   </div>
+  ${watermarkHtml}
   <script>
     window.addEventListener('load', function() {
       window.print();

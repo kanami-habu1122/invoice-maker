@@ -68,9 +68,12 @@ function buildPreviewHtml(data, totals, plan) {
     ? `<div class="inv-notes-area">${esc(data.notes)}</div>`
     : '';
 
-  // ウォーターマーク（無料プランのみ表示）
-  const watermarkHtml = plan === 'free'
-    ? `<div class="inv-watermark">この請求書は請求書メーカー（無料プラン）で作成されました</div>`
+  const watermarkHtml = '';
+
+  // ロゴ（Proプランで設定されている場合）
+  const settings = loadSettings();
+  const logoHtml = settings.logoBase64
+    ? `<div style="margin-bottom:8px;"><img src="${settings.logoBase64}" style="max-height:60px; max-width:160px;" /></div>`
     : '';
 
   return `
@@ -85,6 +88,7 @@ function buildPreviewHtml(data, totals, plan) {
 
       <!-- 右: 請求元・日付 -->
       <div class="inv-sender-block">
+        ${logoHtml}
         <div class="inv-meta-row">
           <span class="inv-meta-label">請求日</span>
           <span>${invoiceDate}</span>

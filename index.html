@@ -52,6 +52,21 @@
   <script src="js/plan.js"></script>
   <script src="js/modal.js"></script>
   <script src="js/list.js"></script>
+  <script>
+    // Stripe決済完了後のリダイレクトURLにトークンが付いていたらProに切り替える
+    // 例: index.html?pro_token=invoice_pro_2024
+    (function checkProToken() {
+      const params = new URLSearchParams(window.location.search);
+      const token  = params.get('pro_token');
+      if (token && token === PRO_ACTIVATION_TOKEN) {
+        setPlan('pro');
+        // URLからトークンを消す（リロードしても再処理されないように）
+        history.replaceState(null, '', window.location.pathname);
+        // 成功メッセージを表示する
+        alert('🎉 Proプランへのアップグレードが完了しました！\nすべての機能をご利用いただけます。');
+      }
+    })();
+  </script>
 
 </body>
 </html>

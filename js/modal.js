@@ -8,6 +8,9 @@
 // ============================================================
 
 
+// Stripeの決済リンク（後でStripeダッシュボードで発行したURLに変える）
+const STRIPE_PAYMENT_URL = 'https://buy.stripe.com/test_6oUaEW5hjguGe1q6xr3Je01';
+
 // ------------------------------------------------------------
 // モーダルをページに動的に追加する
 // ------------------------------------------------------------
@@ -52,8 +55,11 @@ function injectModal() {
 
       <!-- ボタン -->
       <div class="modal-actions">
-        <button class="btn btn-primary btn-full" id="modalRegisterBtn">
-          事前登録する（無料）
+        <a class="btn btn-primary btn-full" id="modalPayBtn" href="#" target="_blank" rel="noopener">
+          ¥980/月でProプランにアップグレード
+        </a>
+        <button class="btn btn-secondary btn-full" id="modalRegisterBtn">
+          まずは事前登録する（無料）
         </button>
         <button class="btn btn-secondary btn-full" id="modalCloseBtn">
           閉じる
@@ -66,6 +72,7 @@ function injectModal() {
   // イベントを登録する
   document.getElementById('modalCloseBtn').addEventListener('click', hideUpgradeModal);
   document.getElementById('modalRegisterBtn').addEventListener('click', handleRegister);
+  document.getElementById('modalPayBtn').href = STRIPE_PAYMENT_URL;
 
   // オーバーレイ（背景）クリックで閉じる
   el.addEventListener('click', (e) => {
@@ -95,6 +102,18 @@ function showUpgradeModal(reason) {
     auto_number: {
       title: '自動採番はProプランの機能です',
       desc:  '請求番号を自動で連番管理できます。手入力の手間がなくなります。',
+    },
+    client: {
+      title: '取引先管理はProプランの機能です',
+      desc:  '取引先を登録しておくと、次回からワンクリックで入力できます。',
+    },
+    item_template: {
+      title: '明細テンプレートはProプランの機能です',
+      desc:  'よく使う明細をテンプレートとして保存し、ワンクリックで呼び出せます。',
+    },
+    bank_template: {
+      title: '振込先テンプレートはProプランの機能です',
+      desc:  '複数の振込先を保存して、簡単に切り替えられます。',
     },
   };
 

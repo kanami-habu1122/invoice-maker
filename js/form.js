@@ -364,3 +364,263 @@ saveBtn.addEventListener('click', () => {
 cancelBtn.addEventListener('click', () => {
   window.location.href = 'index.html';
 });
+
+
+// ============================================================
+// Proプラン機能
+// ============================================================
+
+// ------------------------------------------------------------
+// 自動採番ボタン
+// ------------------------------------------------------------
+document.getElementById('autoNumberBtn').addEventListener('click', () => {
+  if (getPlan() !== 'pro') {
+    showUpgradeModal('auto_number');
+    return;
+  }
+  document.getElementById('invoiceNumber').value = generateInvoiceNumber();
+  updatePreview();
+});
+
+
+// ------------------------------------------------------------
+// ロゴアップロード
+// ------------------------------------------------------------
+(function initLogo() {
+  const logoInput     = document.getElementById('logoInput');
+  const logoPreview   = document.getElementById('logoPreviewImg');
+  const logoDeleteBtn = document.getElementById('logoDeleteBtn');
+
+  // 保存済みロゴを読み込む
+  const settings = loadSettings();
+  if (settings.logoBase64) {
+    logoPreview.src          = settings.logoBase64;
+    logoPreview.style.display = 'inline-block';
+    logoDeleteBtn.style.display = 'inline-block';
+  }
+
+  // ファイル選択時
+  logoInput.addEventListener('change', () => {
+    if (getPlan() !== 'pro') {
+      logoInput.value = '';
+      showUpgradeModal('logo');
+      return;
+    }
+    const file = logoInput.files[0];
+    if (!file) return;
+
+    // FileReader で画像を base64 に変換する
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const base64 = e.target.result;
+      logoPreview.src           = base64;
+      logoPreview.style.display = 'inline-block';
+      logoDeleteBtn.style.display = 'inline-block';
+
+      // 設定に保存する
+      const s = loadSettings();
+      s.logoBase64 = base64;
+      saveSettings(s);
+
+      updatePreview();
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // ロゴ削除ボタン
+  logoDeleteBtn.addEventListener('click', () => {
+    logoPreview.src           = '';
+    logoPreview.style.display = 'none';
+    logoDeleteBtn.style.display = 'none';
+    logoInput.value           = '';
+
+    const s = loadSettings();
+    delete s.logoBase64;
+    saveSettings(s);
+
+    updatePreview();
+  });
+})();
+
+
+// ------------------------------------------------------------
+// 取引先の呼び出し・保存・削除
+// ------------------------------------------------------------
+(function initClientPicker() {
+  const pickerBtn  = document.getElementById('clientPickerBtn');
+  const pickerArea = document.getElementById('clientPickerArea');
+  const picker     = document.getElementById('clientPicker');
+  const saveBtn    = document.getElementById('clientSaveBtn');
+  const deleteBtn  = document.getElementById('clientDeleteBtn');
+
+  function refreshPicker() {
+    const clients = getClients();
+    picker.innerHTML = '<option value="">-- 取引先を選択 --</option>'
+      + clients.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+  }
+
+  pickerBtn.addEventListener('click', () => {
+    if (getPlan() !== 'pro') { showUpgradeModal('client'); return; }
+    const isOpen = pickerArea.style.display !== 'none';
+    pickerArea.style.display = isOpen ? 'none' : 'block';
+    if (!isOpen) refreshPicker();
+  });
+
+  picker.addEventListener('change', () => {
+    const client = getClients().find(c => c.id === picker.value);
+    if (!client) return;
+    document.getElementById('clientName').value   = client.name   || '';
+    document.getElementById('clientPerson').value = client.person || '';
+    updatePreview();
+  });
+
+  saveBtn.addEventListener('click', () => {
+    const name   = document.getElementById('clientName').value.trim();
+    const person = document.getElementById('clientPerson').value.trim();
+    if (!name) { alert('会社名・氏名を入力してください。'); return; }
+    const existing = getClients().find(c => c.name === name);
+    const client   = existing
+      ? { ...existing, person }
+      : { id: Date.now().toString(), name, person };
+    saveClient(client);
+    refreshPicker();
+    picker.value = client.id;
+    alert(`「${name}」を取引先に保存しました。`);
+  });
+
+  deleteBtn.addEventListener('click', () => {
+    const id = picker.value;
+    if (!id) { alert('削除する取引先を選択してください。'); return; }
+    const client = getClients().find(c => c.id === id);
+    if (!confirm(`「${client.name}」を削除しますか？`)) return;
+    deleteClient(id);
+    refreshPicker();
+  });
+})();
+
+
+// ------------------------------------------------------------
+// 明細テンプレートの呼び出し・保存・削除
+// ------------------------------------------------------------
+(function initItemTemplatePicker() {
+  const btn        = document.getElementById('itemTemplateBtn');
+  const area       = document.getElementById('itemTemplateArea');
+  const picker     = document.getElementById('itemTemplatePicker');
+  const nameInput  = document.getElementById('itemTemplateName');
+  const saveBtn    = document.getElementById('itemTemplateSaveBtn');
+  const deleteBtn  = document.getElementById('itemTemplateDeleteBtn');
+
+  function refreshPicker() {
+    const list = getItemTemplates();
+    picker.innerHTML = '<option value="">-- テンプレートを選択 --</option>'
+      + list.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+  }
+
+  btn.addEventListener('click', () => {
+    if (getPlan() !== 'pro') { showUpgradeModal('item_template'); return; }
+    const isOpen = area.style.display !== 'none';
+    area.style.display = isOpen ? 'none' : 'block';
+    if (!isOpen) refreshPicker();
+  });
+
+  // テンプレートを選択したら明細行を差し替える
+  picker.addEventListener('change', () => {
+    const tmpl = getItemTemplates().find(t => t.id === picker.value);
+    if (!tmpl) return;
+    renderItemRows(tmpl.items);
+  });
+
+  // 現在の明細をテンプレートとして保存する
+  saveBtn.addEventListener('click', () => {
+    const name = nameInput.value.trim();
+    if (!name) { alert('テンプレート名を入力してください。'); return; }
+    const items    = collectItems();
+    const existing = getItemTemplates().find(t => t.name === name);
+    const tmpl     = existing
+      ? { ...existing, items }
+      : { id: Date.now().toString(), name, items };
+    saveItemTemplate(tmpl);
+    refreshPicker();
+    picker.value   = tmpl.id;
+    nameInput.value = '';
+    alert(`「${name}」を明細テンプレートに保存しました。`);
+  });
+
+  deleteBtn.addEventListener('click', () => {
+    const id = picker.value;
+    if (!id) { alert('削除するテンプレートを選択してください。'); return; }
+    const tmpl = getItemTemplates().find(t => t.id === id);
+    if (!confirm(`「${tmpl.name}」を削除しますか？`)) return;
+    deleteItemTemplate(id);
+    refreshPicker();
+  });
+})();
+
+
+// ------------------------------------------------------------
+// 振込先テンプレートの呼び出し・保存・削除
+// ------------------------------------------------------------
+(function initBankTemplatePicker() {
+  const btn        = document.getElementById('bankTemplateBtn');
+  const area       = document.getElementById('bankTemplateArea');
+  const picker     = document.getElementById('bankTemplatePicker');
+  const nameInput  = document.getElementById('bankTemplateName');
+  const saveBtn    = document.getElementById('bankTemplateSaveBtn');
+  const deleteBtn  = document.getElementById('bankTemplateDeleteBtn');
+
+  function refreshPicker() {
+    const list = getBankTemplates();
+    picker.innerHTML = '<option value="">-- テンプレートを選択 --</option>'
+      + list.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+  }
+
+  btn.addEventListener('click', () => {
+    if (getPlan() !== 'pro') { showUpgradeModal('bank_template'); return; }
+    const isOpen = area.style.display !== 'none';
+    area.style.display = isOpen ? 'none' : 'block';
+    if (!isOpen) refreshPicker();
+  });
+
+  // テンプレートを選択したらフォームに流し込む
+  picker.addEventListener('change', () => {
+    const tmpl = getBankTemplates().find(t => t.id === picker.value);
+    if (!tmpl) return;
+    document.getElementById('bankName').value      = tmpl.bankName      || '';
+    document.getElementById('branchName').value    = tmpl.branchName    || '';
+    document.getElementById('accountType').value   = tmpl.accountType   || '普通';
+    document.getElementById('accountNumber').value = tmpl.accountNumber || '';
+    document.getElementById('accountHolder').value = tmpl.accountHolder || '';
+    updatePreview();
+  });
+
+  // 現在の振込先をテンプレートとして保存する
+  saveBtn.addEventListener('click', () => {
+    const name = nameInput.value.trim();
+    if (!name) { alert('テンプレート名を入力してください。'); return; }
+    const tmplData = {
+      bankName:      document.getElementById('bankName').value.trim(),
+      branchName:    document.getElementById('branchName').value.trim(),
+      accountType:   document.getElementById('accountType').value,
+      accountNumber: document.getElementById('accountNumber').value.trim(),
+      accountHolder: document.getElementById('accountHolder').value.trim(),
+    };
+    const existing = getBankTemplates().find(t => t.name === name);
+    const tmpl     = existing
+      ? { ...existing, ...tmplData }
+      : { id: Date.now().toString(), name, ...tmplData };
+    saveBankTemplate(tmpl);
+    refreshPicker();
+    picker.value    = tmpl.id;
+    nameInput.value = '';
+    alert(`「${name}」を振込先テンプレートに保存しました。`);
+  });
+
+  deleteBtn.addEventListener('click', () => {
+    const id = picker.value;
+    if (!id) { alert('削除するテンプレートを選択してください。'); return; }
+    const tmpl = getBankTemplates().find(t => t.id === id);
+    if (!confirm(`「${tmpl.name}」を削除しますか？`)) return;
+    deleteBankTemplate(id);
+    refreshPicker();
+  });
+})();
