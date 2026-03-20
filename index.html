@@ -60,9 +60,15 @@
       const token  = params.get('pro_token');
       if (token && token === PRO_ACTIVATION_TOKEN) {
         setPlan('pro');
-        // URLからトークンを消す（リロードしても再処理されないように）
+        // URLからトークンを消してリロードする（表示を更新するため）
+        sessionStorage.setItem('pro_just_upgraded', '1');
         history.replaceState(null, '', window.location.pathname);
-        // 成功メッセージを表示する
+        location.reload();
+        return;
+      }
+      // リロード後に成功メッセージを表示する
+      if (sessionStorage.getItem('pro_just_upgraded')) {
+        sessionStorage.removeItem('pro_just_upgraded');
         alert('🎉 Proプランへのアップグレードが完了しました！\nすべての機能をご利用いただけます。');
       }
     })();
